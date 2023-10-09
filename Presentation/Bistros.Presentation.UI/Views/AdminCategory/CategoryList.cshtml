@@ -1,0 +1,37 @@
+﻿@model IList<Bistros.Core.Application.Dtos.CategoryDtos.ResultCategoryDto>
+
+@{
+	ViewData["Title"] = "CategoryList";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card-title">
+	<h4>Kategori Listesi</h4>
+</div>
+<div class="table-responsive">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Kategori Adı</th>
+				<th>Sil</th>
+				<th>Güncelle</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				
+				<tr>
+					<th>@item.CategoryId</th>
+					<td><a href="#"> @item.CategoryName</a></td>
+					<td><a href="/AdminCategory/deletecategory/@item.CategoryId" class="btn btn-danger">Sil</a></td>
+					<td><a href="/AdminCategory/updatecategory/@item.CategoryId" class="btn btn-success">Güncelle</a></td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	
+	<br />
+	<a href="/AdminCategory/createcategory/" class="btn btn-primary" style="float:right">Kategori Ekle</a>
+</div>
