@@ -1,5 +1,7 @@
-﻿using Bistros.Presentation.UI.Models;
+﻿using Bistros.Core.Application.Dtos.CategoryDtos;
+using Bistros.Presentation.UI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
 
 namespace Bistros.Presentation.UI.Controllers
@@ -7,13 +9,14 @@ namespace Bistros.Presentation.UI.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
+		private readonly IHttpClientFactory _httpClientFactory;
+        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory)
+        {
+            _logger = logger;
+            _httpClientFactory = httpClientFactory;
+        }
 
-		public HomeController(ILogger<HomeController> logger)
-		{
-			_logger = logger;
-		}
-
-		public IActionResult Index()
+        public IActionResult Index()
 		{
 			return View();
 		}
@@ -28,8 +31,16 @@ namespace Bistros.Presentation.UI.Controllers
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}
-        public IActionResult Menu()
+        public async Task< IActionResult> Menu()
         {
+			var client = _httpClientFactory.CreateClient();
+			var responseMessage = await client.GetAsync("https://localhost:7162/api/Category");
+			if (responseMessage.IsSuccessStatusCode)
+			{
+				var jsonData = await responseMessage.Content.ReadAsStringAsync();
+				var values = JsonConvert.DeserializeObject<List<ResultCategoryDto>>(jsonData);
+				return View(values);
+			}
             return View();
         }
     }

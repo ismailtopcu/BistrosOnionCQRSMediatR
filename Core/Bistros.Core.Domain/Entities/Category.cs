@@ -10,6 +10,6 @@ namespace Bistros.Core.Domain.Entities
     {
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
-        public ICollection<Food>? Foods { get; set; }
+        public List<Food>? Foods { get; set; }
     }
 }

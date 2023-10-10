@@ -1,60 +1,89 @@
-﻿using AutoMapper;
-using Bistros.Core.Application.Dtos.CategoryDtos;
-using Bistros.Core.Application.Features.CQRS.Commands.Category;
-using Bistros.Core.Application.Features.CQRS.Queries.Category;
-using MediatR;
+﻿using Bistros.Core.Application.Dtos.CategoryDtos;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
 
 namespace Bistros.Presentation.UI.Controllers
 {
     public class AdminCategoryController : Controller
     {
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-		public AdminCategoryController(IMediator mediator, IMapper mapper)
+		public AdminCategoryController(IHttpClientFactory httpClientFactory)
 		{
-			_mediator = mediator;
-			_mapper = mapper;
+			_httpClientFactory = httpClientFactory;
 		}
-		[HttpGet]
-        public async Task<IActionResult> CategoryList()
+
+		public async Task<IActionResult> CategoryList()
         {
-            var value = await _mediator.Send(new ListCategoryQueryRequest());
-            return View(value);
-        }
+			var client = _httpClientFactory.CreateClient();
+			var responseMessage = await client.GetAsync("https://localhost:7162/api/Category");
+			if (responseMessage.IsSuccessStatusCode)
+			{
+				var jsonData = await responseMessage.Content.ReadAsStringAsync();
+				var values = JsonConvert.DeserializeObject<List<ResultCategoryDto>>(jsonData);
+				return View(values);
+			}
+			return View();
+		}
+
         [HttpGet]
         public IActionResult CreateCategory()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> CreateCategory(CreateCategoryCommandRequest createCategoryCommandRequest)
+        public async Task<IActionResult> CreateCategory(CreateCategoryDto createCategoryDto)
         {
-            await _mediator.Send(createCategoryCommandRequest);
-            return RedirectToAction("CategoryList");
+            var client = _httpClientFactory.CreateClient();
+            var jsonData = JsonConvert.SerializeObject(createCategoryDto);
+            StringContent stringContent = new StringContent(jsonData,Encoding.UTF8,"application/json");
+            var responseMessage = await client.PostAsync("https://localhost:7162/api/Category", stringContent);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("CategoryList");
+            }
+            return View(createCategoryDto);
         }
-        
         [HttpGet]
-        public async Task<IActionResult> UpdateCategory(int id)
+		public async Task<IActionResult> UpdateCategory(int id)
         {
-            var values = await _mediator.Send(new GetCategoryQueryRequest(id));
-            var result = _mapper.Map<UpdateCategoryDto>(values);
-            return View(result);
-        }
-        [HttpPost]
-        public async Task<IActionResult> UpdateCategory(UpdateCategoryCommandRequest updateCategoryCommandRequest)
-        {
-            var value = await _mediator.Send(updateCategoryCommandRequest);
-            return RedirectToAction("CategoryList");
-        } 
-        
-        public async Task<IActionResult> DeleteCategory(int id)
-        {
-            await _mediator.Send(new RemoveCategoryCommandRequest(id));
+			var client = _httpClientFactory.CreateClient();
+			var responseMessage = await client.GetAsync("https://localhost:7162/api/Category/" + id);
+			if (responseMessage.IsSuccessStatusCode)
+			{
+				var jsonData = await responseMessage.Content.ReadAsStringAsync();
+				var values = JsonConvert.DeserializeObject<UpdateCategoryDto>(jsonData);
+				return View(values);
+			}
 			return RedirectToAction("CategoryList");
 		}
-        
+        [HttpPost]
+		public async Task<IActionResult> UpdateCategory(UpdateCategoryDto updateCategoryDto)
+        {
+			var client = _httpClientFactory.CreateClient();
+			var jsonData = JsonConvert.SerializeObject(updateCategoryDto);
+			StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+			var responseMessage = await client.PutAsync("https://localhost:7162/api/Category", stringContent);
+			if (responseMessage.IsSuccessStatusCode)
+			{
+				return RedirectToAction("ProductList");
+			}
+			return View();
+		}
+
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var responseMessage = await client.DeleteAsync("https://localhost:7162/api/Category?id=" + id);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("CategoryList");
+            }
+            return View();
+        }
+
+
     }
 }

@@ -31,8 +31,4 @@
     <ProjectReference Include="..\..\Infrastructure\Bistros.Infrastructure.Persistance\Bistros.Infrastructure.Persistance.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewComponents\" />
-  </ItemGroup>
-
 </Project>

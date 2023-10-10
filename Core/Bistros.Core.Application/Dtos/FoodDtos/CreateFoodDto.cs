@@ -1,4 +1,6 @@
-﻿namespace Bistros.Core.Application.Dtos.FoodDtos
+﻿using Bistros.Core.Domain.Entities;
+
+namespace Bistros.Core.Application.Dtos.FoodDtos
 {
     public class CreateFoodDto
     {

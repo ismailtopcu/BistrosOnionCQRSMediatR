@@ -14,6 +14,8 @@ builder.Services.AddDbContext<BistrosContext>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 builder.Services.AddApplicationServices();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped(typeof(ICategoryRepository), typeof(EfCategoryRepository));
 
 
 var app = builder.Build();

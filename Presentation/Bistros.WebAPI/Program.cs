@@ -17,6 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<BistrosContext>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped(typeof(ICategoryRepository), typeof(EfCategoryRepository));
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 builder.Services.AddApplicationServices();
 

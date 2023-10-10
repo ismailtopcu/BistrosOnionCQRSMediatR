@@ -14,6 +14,8 @@
 				<th>#</th>
 				<th>Ürün Adı</th>
 				<th>Ürün Açıklaması</th>
+				<th>Fiyatı</th>
+				<th>Kategori</th>
 				<th>Sil</th>
 				<th>Güncelle</th>
 			</tr>
@@ -24,8 +26,10 @@
 
 				<tr>
 					<th>@item.FoodId</th>
-					<td><a href="#"> @item.FoodName</a></td>
-					<td><a href="#"> @item.FoodDescription</a></td>
+					<td> @item.FoodName</td>
+					<td> @item.FoodDescription</td>
+					<td> @item.FoodPrice</td>
+					<td> @item.Category.CategoryName</td>
 					<td><a href="/AdminFood/deleteFood/@item.FoodId" class="btn btn-danger">Sil</a></td>
 					<td><a href="/AdminFood/updateFood/@item.FoodId" class="btn btn-success">Güncelle</a></td>
 				</tr>
@@ -34,6 +38,6 @@
 	</table>
 
 	<br />
-	<a href="/AdminFood/FoodId/" class="btn btn-primary" style="float:right">Kategori Ekle</a>
+	<a href="/AdminFood/CreateFood/" class="btn btn-primary" style="float:right">Kategori Ekle</a>
 </div>
 

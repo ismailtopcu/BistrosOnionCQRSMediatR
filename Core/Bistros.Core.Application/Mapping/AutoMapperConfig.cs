@@ -17,11 +17,13 @@ namespace Bistros.Core.Application.Mapping
             CreateMap<ResultCategoryDto,Category>().ReverseMap();
             CreateMap<CreateCategoryDto,Category>().ReverseMap();
             CreateMap<UpdateCategoryDto,Category>().ReverseMap();
+            CreateMap<ResultCategoryNoFoodsDto, Category>().ReverseMap();
             CreateMap<UpdateCategoryDto,ResultCategoryDto>().ReverseMap();
 
             CreateMap<ResultFoodDto, Food>().ReverseMap();
             CreateMap<CreateFoodDto, Food>().ReverseMap();
             CreateMap<UpdateFoodDto, Food>().ReverseMap();
+            CreateMap<ResultFoodNoCatDto, Food>().ReverseMap();
         }
     }
 }
