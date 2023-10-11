@@ -1,6 +1,6 @@
 # Bistros
 Bistros projesi Onion Architecture yapısıyla, CQRS pattern ve MediatR kütüphanesini kullanılarak geliştirilmiş bir Restoran web tasarımıdır.
-# Tecnologies
+# Technologies
 - MVC
 - .Net Core Web API
 - Entity Framework
